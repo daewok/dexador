@@ -505,9 +505,10 @@
            (finalize-connection (stream connection-header uri)
              (if (or want-stream
                      (connection-keep-alive-p connection-header))
-                 (push-connection (format nil "~A://~A"
-                                          (uri-scheme uri)
-                                          (uri-authority uri)) stream)
+                 (when use-connection-pool
+                   (push-connection (format nil "~A://~A"
+                                            (uri-scheme uri)
+                                            (uri-authority uri)) stream))
                  (ignore-errors (close stream)))))
     (let* ((uri (quri:uri uri))
            (proxy (when (http-proxy-p proxy-uri) proxy))
